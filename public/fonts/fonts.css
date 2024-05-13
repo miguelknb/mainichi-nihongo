@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'NotoSansJP';
+    src: url('/fonts/NotoSansJP-Regular.ttf') format('ttf'),
+    url('/fonts/NotoSansJP-Medium.ttf') format('ttf');
+    /* Add more src URLs if you have multiple font file formats */
+    font-weight: normal;
+    font-style: normal;
+  }

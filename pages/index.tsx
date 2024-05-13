@@ -1,6 +1,6 @@
 import Head from "next/head";
 import JishoAPI from "unofficial-jisho-api";
-import { JishoAPIResult, JishoResult, KanjiParseResult  } from "unofficial-jisho-api";
+import { JishoAPIResult, JishoResult, KanjiParseResult, JishoWordSense  } from "unofficial-jisho-api";
 
 import {
   Container,
@@ -11,7 +11,11 @@ import {
   Separator,
   Kana,
   Furigana,
-  WordContainer
+  WordContainer,
+  MeaningsContainer,
+  Meaning,
+  PartOfSpeech,
+  InnerContainer
 } from "@/components/sharedstyles";
 import Cards from "@/components/cards";
 import Error from "next/error";
@@ -23,6 +27,7 @@ const Home = (props : any) => {
   console.log(props.data)
   const word : string  =  props.data.japanese[0].word;
   const furigana : string = props.data.japanese[0].reading;
+  const senses : JishoWordSense[] = props.data.senses;
 
   return (
     <Container>
@@ -43,6 +48,19 @@ const Home = (props : any) => {
           </Kana>
         </WordContainer>
         <Separator/>
+        <MeaningsContainer>
+        {senses.map( (sense, index) => {
+          const parts_of_speech = sense.parts_of_speech;
+          const key = sense.english_definitions, meaning = "m", pos = "p";
+          const definitions = sense.english_definitions.join("; ")
+          return <>
+          <InnerContainer key={word + key}>
+            <PartOfSpeech key={key + meaning}>{parts_of_speech[0]}</PartOfSpeech>
+            <Meaning key={key + pos}>{index}. {definitions}</Meaning>
+          </InnerContainer>
+          </>
+        })}
+        </MeaningsContainer>
 
         {/* <Description>
           Get started by editing
@@ -71,22 +89,6 @@ interface KanjiReading {
   reading: string;
 }
 
-function separateKanjiReadings(word: string, reading: string): KanjiReading[] {
-  const kanjiReadings: KanjiReading[] = [];
-  const kanjiArray: string[] = Array.from(new Set(word.match(/[一-龯]/g))); // Extract unique kanji characters
-
-  // Iterate over kanji characters in the word
-  for (const kanji of kanjiArray) {
-      // Find the index of the kanji in the word
-      const index = word.indexOf(kanji);
-      // Get the reading for this kanji
-      const kanjiReading = reading.substr(index, kanji.length).trim();
-      // Create object for kanji and its reading
-      kanjiReadings.push({ kanji, reading: kanjiReading });
-  }
-
-  return kanjiReadings;
-}
 
 
 export async function getServerSideProps() {
@@ -95,7 +97,7 @@ export async function getServerSideProps() {
 
   try {
 
-    const search_frase : string = "大臣";
+    const search_frase : string = "文化";
 
     const res : JishoAPIResult = await jisho.searchForPhrase(search_frase);
 
@@ -123,14 +125,6 @@ export async function getServerSideProps() {
       const kanji_res : KanjiParseResult = await jisho.searchForKanji(kanji);
       return kanji_res;
     }));
-
-
-    // Create Kanji view (adding furigana)
-    let view_kanji = kanji_results.map( (kanji_result, index) => {
-      // const all_readings : string[] = [...kanji_result.kunyomi, ...kanji_result.onyomi];
-      const kanji_reading = separateKanjiReadings(exact_match.slug, exact_match.japanese[0].reading)
-      console.log(kanji_reading)
-    });
 
     const word_result : WordResult = {
       ...exact_match,

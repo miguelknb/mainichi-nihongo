@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  padding: 0 0.5rem;
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
@@ -21,10 +20,10 @@ export const Main = styled.main`
 
 export const Title = styled.h1`
   margin: 0;
-  line-height: 1.15;
+  line-height: 1.5;
   font-size: 6rem;
   text-align: center;
-  text-decoration: none;
+  font-family: NotoSansJP, sans-serif;
 `;
 
 export const Description = styled.p`
@@ -67,3 +66,28 @@ export const Kana = styled.div`
 
 `;
 
+export const MeaningsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: space-between;
+  height: fit-content;
+`
+export const InnerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  margin: 1rem 0rem 1rem 0rem;
+`
+
+export const Meaning = styled.p`
+  font-size: 1.3rem;
+  font-family: NotoSansJP, sans-serif;
+  margin: 0rem;
+  `
+
+export const PartOfSpeech = styled.p`
+  font-family: NotoSansJP, sans-serif;
+  font-weight: medium;
+  margin: 0rem;
+`
