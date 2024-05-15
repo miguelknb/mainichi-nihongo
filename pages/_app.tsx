@@ -10,6 +10,17 @@ const theme: DefaultTheme = {
   },
 };
 
+declare global {
+  interface Array<T> {
+      getRandomItem(): T;
+  }
+}
+
+Array.prototype.getRandomItem = function<T>(): T {
+  const randomIndex: number = Math.floor(Math.random() * this.length);
+  return this[randomIndex];
+};
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>

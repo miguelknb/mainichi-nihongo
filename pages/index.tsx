@@ -17,6 +17,9 @@ import {
   PartOfSpeech,
   InnerContainer
 } from "@/components/sharedstyles";
+
+import { kanji_list } from "@/public/kanji"; 
+
 import Cards from "@/components/cards";
 import Error from "next/error";
 
@@ -24,7 +27,7 @@ const Home = (props : any) => {
    
   if (!props.sucess) return <p>Bad :c</p>
 
-  console.log(props.data)
+  // console.log(props.data)
   const word : string  =  props.data.japanese[0].word;
   const furigana : string = props.data.japanese[0].reading;
   const senses : JishoWordSense[] = props.data.senses;
@@ -89,6 +92,9 @@ interface KanjiReading {
   reading: string;
 }
 
+const RandomKanji = (): string => {
+  return kanji_list.getRandomItem();
+}
 
 
 export async function getServerSideProps() {
@@ -97,20 +103,28 @@ export async function getServerSideProps() {
 
   try {
 
-    const search_frase : string = "文化";
+    const search_frase : string = "電車";
+    const search_kanji : string = RandomKanji();
 
-    const res : JishoAPIResult = await jisho.searchForPhrase(search_frase);
-
+    const res_kanji : KanjiParseResult = await jisho.searchForKanji(search_kanji);
+    const possible_word : string[] = [...res_kanji.kunyomiExamples, ...res_kanji.onyomiExamples].map( example => example.example)
+    const word = possible_word.getRandomItem();
+    
+    const res : JishoAPIResult = await jisho.searchForPhrase(word);
+    
     if (res.meta.status != 200) return; 
 
     // Try to find exact match for word
     
     const results : JishoResult[] = res.data;
 
+    console.log("word :", word);
+
+
     let exact_match : JishoResult | undefined;
 
     exact_match = results.find( result => {
-      return result.slug === search_frase;
+      return result.slug === word;
     })
 
     if (exact_match == undefined) return { props: { sucess: false } };
