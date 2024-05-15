@@ -1,12 +1,16 @@
 import styled from "styled-components";
 
+interface MeaningProps {
+  first?: boolean;
+}
+
 export const Container = styled.div`
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  min-height: 100vh;
+  /* height: 100vh; */
+  /* min-height: 100vh; */
 `;
 
 export const Main = styled.main`
@@ -21,7 +25,7 @@ export const Main = styled.main`
 export const Title = styled.h1`
   margin: 0;
   line-height: 1.5;
-  font-size: 6rem;
+  font-size: 4rem;
   text-align: center;
   font-family: NotoSansJP, sans-serif;
 `;
@@ -43,7 +47,7 @@ export const CodeTag = styled.code`
 `;
 
 export const Separator = styled.hr`
-  width: 10rem;
+  width: 20vw;
   border-top: 1px solid #464646;
   border-radius: 5px;
 `
@@ -73,6 +77,14 @@ export const MeaningsContainer = styled.div`
   justify-content: space-between;
   height: fit-content;
 `
+export const PhrasesContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+`
+
+
 export const InnerContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -80,14 +92,28 @@ export const InnerContainer = styled.div`
   margin: 1rem 0rem 1rem 0rem;
 `
 
-export const Meaning = styled.p`
-  font-size: 1.3rem;
-  font-family: NotoSansJP, sans-serif;
+export const Meaning = styled.p<MeaningProps>`
+  font-size: 1.1rem;
+  font-family: Helvetica, sans-serif;
+  font-weight: ${props => props.first ? "bold" : "normal"};
   margin: 0rem;
   `
 
 export const PartOfSpeech = styled.p`
+  font-size: .9rem;
   font-family: NotoSansJP, sans-serif;
   font-weight: medium;
   margin: 0rem;
+`
+export const MeaningNumber = styled.p`
+  font-size: .8rem;
+  font-family: NotoSansJP, sans-serif;
+  font-weight: lighter;
+  margin: 0rem;
+`
+
+export const MeaningLine = styled.div`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
 `

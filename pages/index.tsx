@@ -15,7 +15,10 @@ import {
   MeaningsContainer,
   Meaning,
   PartOfSpeech,
-  InnerContainer
+  InnerContainer,
+  PhrasesContainer,
+  MeaningLine,
+  MeaningNumber
 } from "@/components/sharedstyles";
 
 import { kanji_list } from "@/public/kanji"; 
@@ -27,7 +30,7 @@ const Home = (props : any) => {
    
   if (!props.sucess) return <p>Bad :c</p>
 
-  // console.log(props.data)
+  console.log(props.data)
   const word : string  =  props.data.japanese[0].word;
   const furigana : string = props.data.japanese[0].reading;
   const senses : JishoWordSense[] = props.data.senses;
@@ -55,16 +58,26 @@ const Home = (props : any) => {
         {senses.map( (sense, index) => {
           const parts_of_speech = sense.parts_of_speech;
           const key = sense.english_definitions, meaning = "m", pos = "p";
-          const definitions = sense.english_definitions.join("; ")
+          const definitions = sense.english_definitions;
+
           return <>
           <InnerContainer key={word + key}>
             <PartOfSpeech key={key + meaning}>{parts_of_speech[0]}</PartOfSpeech>
-            <Meaning key={key + pos}>{index}. {definitions}</Meaning>
+            <MeaningLine>
+              {definitions.map( (definition, index) => {
+                const is_first : boolean = index == 0;
+    
+                return <Meaning key={key + pos} first={is_first}>{definition};&nbsp;</Meaning>
+              })}
+            </MeaningLine>
+            
           </InnerContainer>
           </>
         })}
         </MeaningsContainer>
-
+        <PhrasesContainer>
+        
+        </PhrasesContainer>
         {/* <Description>
           Get started by editing
           <CodeTag>pages/index.tsx</CodeTag>
@@ -103,7 +116,6 @@ export async function getServerSideProps() {
 
   try {
 
-    const search_frase : string = "電車";
     const search_kanji : string = RandomKanji();
 
     const res_kanji : KanjiParseResult = await jisho.searchForKanji(search_kanji);
@@ -144,10 +156,6 @@ export async function getServerSideProps() {
       ...exact_match,
       kanjis: kanji_results,
     }
-
-    // const teste = 
-
-    // console.log(word_result);
 
 
     return { props: { data: word_result, sucess: true } }
