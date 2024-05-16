@@ -57,33 +57,24 @@ const Home = (props : any) => {
         <MeaningsContainer>
         {senses.map( (sense, index) => {
           const parts_of_speech = sense.parts_of_speech;
-          const key = sense.english_definitions, meaning = "m", pos = "p";
+          const key = parts_of_speech[index], meaning = "m", pos = "p";
           const definitions = sense.english_definitions;
 
-          return <>
-          <InnerContainer key={word + key}>
+          return <InnerContainer key={word + key}>
             <PartOfSpeech key={key + meaning}>{parts_of_speech[0]}</PartOfSpeech>
-            <MeaningLine>
+            <MeaningLine key={key + pos}>
               {definitions.map( (definition, index) => {
-                const is_first : boolean = index == 0;
+                const is_first : boolean = (index == 0);
     
-                return <Meaning key={key + pos} first={is_first}>{definition};&nbsp;</Meaning>
+                return <Meaning key={definition} $first={is_first}>{definition};&nbsp;</Meaning>
               })}
             </MeaningLine>
-            
           </InnerContainer>
-          </>
         })}
         </MeaningsContainer>
         <PhrasesContainer>
         
         </PhrasesContainer>
-        {/* <Description>
-          Get started by editing
-          <CodeTag>pages/index.tsx</CodeTag>
-        </Description> */}
-
-        {/* <Cards /> */}
       </Main>
     </Container>
   );
@@ -95,14 +86,8 @@ const isKanji = (char: string): boolean  => {
   const kanjiRegex = /[\u4e00-\u9faf]/;
   return kanjiRegex.test(char);
 }
-
 interface WordResult extends JishoResult {
   kanjis : KanjiParseResult[];
-}
-
-interface KanjiReading {
-  kanji: string;
-  reading: string;
 }
 
 const RandomKanji = (): string => {
@@ -119,7 +104,9 @@ export async function getServerSideProps() {
     const search_kanji : string = RandomKanji();
 
     const res_kanji : KanjiParseResult = await jisho.searchForKanji(search_kanji);
+    
     const possible_word : string[] = [...res_kanji.kunyomiExamples, ...res_kanji.onyomiExamples].map( example => example.example)
+    
     const word = possible_word.getRandomItem();
     
     const res : JishoAPIResult = await jisho.searchForPhrase(word);
@@ -130,9 +117,6 @@ export async function getServerSideProps() {
     
     const results : JishoResult[] = res.data;
 
-    console.log("word :", word);
-
-
     let exact_match : JishoResult | undefined;
 
     exact_match = results.find( result => {
@@ -141,6 +125,8 @@ export async function getServerSideProps() {
 
     if (exact_match == undefined) return { props: { sucess: false } };
 
+    // check
+
     // Create list of Kanjis in word
     const kanjis : string[] = exact_match?.slug
       .split("")
@@ -148,7 +134,11 @@ export async function getServerSideProps() {
 
     // Get aditional kanji info
     let kanji_results : KanjiParseResult[] = await Promise.all(kanjis.map( async (kanji) => {
-      const kanji_res : KanjiParseResult = await jisho.searchForKanji(kanji);
+      let kanji_res : KanjiParseResult = await jisho.searchForKanji(kanji);
+
+      if (kanji_res.taughtIn === undefined) kanji_res.taughtIn = "";
+      if (kanji_res.jlptLevel === undefined) kanji_res.jlptLevel = "";
+      if (kanji_res.newspaperFrequencyRank === undefined) kanji_res.newspaperFrequencyRank = "";
       return kanji_res;
     }));
 
@@ -156,6 +146,8 @@ export async function getServerSideProps() {
       ...exact_match,
       kanjis: kanji_results,
     }
+
+    console.log(word_result)
 
 
     return { props: { data: word_result, sucess: true } }

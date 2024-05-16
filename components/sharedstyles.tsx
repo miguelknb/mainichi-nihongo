@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface MeaningProps {
-  first?: boolean;
+  $first?: boolean;
 }
 
 export const Container = styled.div`
@@ -95,7 +95,7 @@ export const InnerContainer = styled.div`
 export const Meaning = styled.p<MeaningProps>`
   font-size: 1.1rem;
   font-family: Helvetica, sans-serif;
-  font-weight: ${props => props.first ? "bold" : "normal"};
+  font-weight: ${props => props.$first ? "bold" : "normal"};
   margin: 0rem;
   `
 
