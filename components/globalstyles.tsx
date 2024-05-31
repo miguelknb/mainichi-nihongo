@@ -10,6 +10,10 @@ const GlobalStyle = createGlobalStyle`
       Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   }
 
+  p {
+    margin: 0rem;
+  }
+
   a {
     color: inherit;
     text-decoration: none;

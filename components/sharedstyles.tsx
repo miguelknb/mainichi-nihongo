@@ -17,9 +17,11 @@ export const Main = styled.main`
   padding: 5rem 0;
   flex: 1;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
+  width: 80%;
 `;
 
 export const Title = styled.h1`
@@ -56,6 +58,7 @@ export const WordContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 50vh;
 `;
 
 export const Furigana = styled.ruby`
@@ -76,6 +79,7 @@ export const MeaningsContainer = styled.div`
   align-items: left;
   justify-content: space-between;
   height: fit-content;
+  width: 40vh;
 `
 export const PhrasesContainer = styled.div`
   display: flex;
@@ -84,6 +88,13 @@ export const PhrasesContainer = styled.div`
   justify-content: space-between;
 `
 
+export const KanjiContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  max-width: 60vh; 
+`
 
 export const InnerContainer = styled.div`
   display: flex;
@@ -115,5 +126,6 @@ export const MeaningNumber = styled.p`
 export const MeaningLine = styled.div`
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
 `

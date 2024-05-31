@@ -18,13 +18,17 @@ import {
   InnerContainer,
   PhrasesContainer,
   MeaningLine,
-  MeaningNumber
+  MeaningNumber,
+  KanjiContainer
 } from "@/components/sharedstyles";
+
+
 
 import { kanji_list } from "@/public/kanji"; 
 
 import Cards from "@/components/cards";
 import Error from "next/error";
+import Kanji from "@/components/kanji";
 
 const Home = (props : any) => {
    
@@ -34,7 +38,8 @@ const Home = (props : any) => {
   const word : string  =  props.data.japanese[0].word;
   const furigana : string = props.data.japanese[0].reading;
   const senses : JishoWordSense[] = props.data.senses;
-
+  const kanjis : KanjiParseResult[] = props.data.kanjis;
+ 
   return (
     <Container>
       <Head>
@@ -75,6 +80,11 @@ const Home = (props : any) => {
         <PhrasesContainer>
         
         </PhrasesContainer>
+        <KanjiContainer>
+          {kanjis.map( (kanji) => {
+            return <Kanji kanji={kanji} key={kanji.query}/>
+          })}
+        </KanjiContainer>
       </Main>
     </Container>
   );
@@ -102,11 +112,8 @@ export async function getServerSideProps() {
   try {
 
     const search_kanji : string = RandomKanji();
-
     const res_kanji : KanjiParseResult = await jisho.searchForKanji(search_kanji);
-    
-    const possible_word : string[] = [...res_kanji.kunyomiExamples, ...res_kanji.onyomiExamples].map( example => example.example)
-    
+    const possible_word : string[] = [...res_kanji.kunyomiExamples, ...res_kanji.onyomiExamples].map( example => example.example)  
     const word = possible_word.getRandomItem();
     
     const res : JishoAPIResult = await jisho.searchForPhrase(word);
