@@ -1,5 +1,5 @@
 import Head from "next/head";
-import JishoAPI from "unofficial-jisho-api";
+import JishoAPI, { ExampleParseResult, Result } from "unofficial-jisho-api";
 import { JishoAPIResult, JishoResult, KanjiParseResult, JishoWordSense  } from "unofficial-jisho-api";
 
 import {
@@ -19,7 +19,11 @@ import {
   PhrasesContainer,
   MeaningLine,
   MeaningNumber,
-  KanjiContainer
+  KanjiContainer,
+  Row,
+  Column,
+  ExampleContainer,
+  ColumnTitle
 } from "@/components/sharedstyles";
 
 
@@ -39,7 +43,9 @@ const Home = (props : any) => {
   const furigana : string = props.data.japanese[0].reading;
   const senses : JishoWordSense[] = props.data.senses;
   const kanjis : KanjiParseResult[] = props.data.kanjis;
- 
+  const examples : Result[] = props.data.examples.results;
+
+
   return (
     <Container>
       <Head>
@@ -48,43 +54,56 @@ const Home = (props : any) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Main>
-        <WordContainer>
-          <Furigana>
-            {furigana}
-          </Furigana>
-          <Kana>
-            <Title>
-              {word}
-            </Title>
-          </Kana>
-        </WordContainer>
-        <Separator/>
-        <MeaningsContainer>
-        {senses.map( (sense, index) => {
-          const parts_of_speech = sense.parts_of_speech;
-          const key = parts_of_speech[index], meaning = "m", pos = "p";
-          const definitions = sense.english_definitions;
+        <Column>
+          <KanjiContainer>
+            {kanjis.map((kanji) => {
+              return <Kanji kanji={kanji} key={kanji.query} />
+            })}
+          </KanjiContainer>
+        </Column>
+        <Column>
+          <Row>
+            <WordContainer>
+              <Furigana>
+                {furigana}
+              </Furigana>
+              <Kana>
+                <Title>
+                  {word}
+                </Title>
+              </Kana>
+            </WordContainer>
+          </Row>
+          <Separator />
+          <MeaningsContainer>
+            {senses.map((sense, index) => {
+              const parts_of_speech = sense.parts_of_speech;
+              const key = parts_of_speech[index], meaning = "m", pos = "p";
+              const definitions = sense.english_definitions;
 
-          return <InnerContainer key={word + key}>
-            <PartOfSpeech key={key + meaning}>{parts_of_speech[0]}</PartOfSpeech>
-            <MeaningLine key={key + pos}>
-              {definitions.map( (definition, index) => {
-                const is_first : boolean = (index == 0);
-    
-                return <Meaning key={definition} $first={is_first}>{definition};&nbsp;</Meaning>
-              })}
-            </MeaningLine>
-          </InnerContainer>
-        })}
-        </MeaningsContainer>
-        <PhrasesContainer>
-        
-        </PhrasesContainer>
-        <KanjiContainer>
-          {kanjis.map( (kanji) => {
-            return <Kanji kanji={kanji} key={kanji.query}/>
-          })}
-        </KanjiContainer>
+              return <InnerContainer key={word + key}>
+                <PartOfSpeech key={key + meaning}>{parts_of_speech[0]}</PartOfSpeech>
+                <MeaningLine key={key + pos}>
+                  {definitions.map((definition, index) => {
+                    const is_first: boolean = (index == 0);
+
+                    return <Meaning key={definition} $first={is_first}>{definition};&nbsp;</Meaning>
+                  })}
+                </MeaningLine>
+              </InnerContainer>
+            })}
+          </MeaningsContainer>
+        </Column>
+        <Column>
+          <PhrasesContainer>
+            {examples.map( ex => {
+              return <ExampleContainer>
+                  <p>{ex.kana}</p>
+                  <p>{ex.english}</p>
+              </ExampleContainer>
+            })}
+          </PhrasesContainer>
+        </Column>
       </Main>
     </Container>
   );
@@ -98,6 +117,7 @@ const isKanji = (char: string): boolean  => {
 }
 interface WordResult extends JishoResult {
   kanjis : KanjiParseResult[];
+  examples : ExampleParseResult;
 }
 
 const RandomKanji = (): string => {
@@ -115,7 +135,7 @@ export async function getServerSideProps() {
     const res_kanji : KanjiParseResult = await jisho.searchForKanji(search_kanji);
     const possible_word : string[] = [...res_kanji.kunyomiExamples, ...res_kanji.onyomiExamples].map( example => example.example)  
     const word = possible_word.getRandomItem();
-    
+
     const res : JishoAPIResult = await jisho.searchForPhrase(word);
     
     if (res.meta.status != 200) return; 
@@ -149,13 +169,15 @@ export async function getServerSideProps() {
       return kanji_res;
     }));
 
+    // Get examples
+
+    let examples : ExampleParseResult = await jisho.searchForExamples(exact_match.slug);
+
     const word_result : WordResult = {
       ...exact_match,
       kanjis: kanji_results,
+      examples: examples
     }
-
-    console.log(word_result)
-
 
     return { props: { data: word_result, sucess: true } }
   } 

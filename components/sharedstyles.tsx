@@ -18,10 +18,9 @@ export const Main = styled.main`
   flex: 1;
   display: flex;
   flex-wrap: wrap;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  width: 80%;
+  align-items: flex-start;
 `;
 
 export const Title = styled.h1`
@@ -49,7 +48,7 @@ export const CodeTag = styled.code`
 `;
 
 export const Separator = styled.hr`
-  width: 20vw;
+  width: 80%;
   border-top: 1px solid #464646;
   border-radius: 5px;
 `
@@ -58,7 +57,7 @@ export const WordContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 50vh;
+  width: 100%;
 `;
 
 export const Furigana = styled.ruby`
@@ -78,13 +77,11 @@ export const MeaningsContainer = styled.div`
   flex-direction: column;
   align-items: left;
   justify-content: space-between;
-  height: fit-content;
-  width: 40vh;
+  padding: 0.8rem;
 `
 export const PhrasesContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: space-between;
 `
 
@@ -128,4 +125,42 @@ export const MeaningLine = styled.div`
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
+`
+
+export const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 30vw;
+  /* border: 2px solid red; */
+  height: max-content;
+`
+
+export const Row = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+`
+
+export const ExampleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: .5rem;
+
+  p {
+    font-size: .9rem;
+    font-family: NotoSansJP, sans-serif;
+    font-weight: lighter;
+    margin: 0rem;
+  }
+`
+
+export const ColumnTitle = styled.p`
+  font-size: 1rem;
+  font-family: NotoSansJP, sans-serif;
+  font-weight: bold;
+  margin: 0rem;
+  margin-top: 5rem;
 `
