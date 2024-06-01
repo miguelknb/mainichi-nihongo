@@ -131,7 +131,7 @@ const RandomKanji = (): string => {
 }
 
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
 
   const jisho = new JishoAPI();
 
