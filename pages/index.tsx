@@ -137,6 +137,7 @@ export async function getServerSideProps() {
 
   try {
 
+    kanji_list.
     const search_kanji : string = RandomKanji();
     const res_kanji : KanjiParseResult = await jisho.searchForKanji(search_kanji);
     const possible_word : string[] = [...res_kanji.kunyomiExamples, ...res_kanji.onyomiExamples].map( example => example.example)  
