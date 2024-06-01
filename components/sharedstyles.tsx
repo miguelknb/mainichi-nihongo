@@ -96,7 +96,8 @@ export const KanjiContainer = styled.div`
 export const InnerContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: fit-content;
+  height: max-content;
+  justify-content: space-evenly;
   margin: 1rem 0rem 1rem 0rem;
 `
 
@@ -110,7 +111,8 @@ export const Meaning = styled.p<MeaningProps>`
 export const PartOfSpeech = styled.p`
   font-size: .9rem;
   font-family: NotoSansJP, sans-serif;
-  font-weight: medium;
+  font-weight: lighter;
+  padding-bottom: .3rem;
   margin: 0rem;
 `
 export const MeaningNumber = styled.p`

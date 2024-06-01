@@ -18,6 +18,7 @@ const Column = styled.div<ColumnProps>`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  padding: 0rem .2rem 0rem .2rem;
   align-items: ${props => props.$center? "center" : "flex-start"};
   width: ${props => props.width};
 `
