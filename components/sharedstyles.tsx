@@ -48,9 +48,10 @@ export const CodeTag = styled.code`
 `;
 
 export const Separator = styled.hr`
-  width: 80%;
+  width: 92%;
   border-top: 1px solid #464646;
   border-radius: 5px;
+  margin-bottom: 1rem;
 `
 
 export const WordContainer = styled.div`
@@ -79,6 +80,18 @@ export const MeaningsContainer = styled.div`
   justify-content: space-between;
   padding: 0.8rem;
 `
+export const MiddleContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0rem 0.8rem 0rem 0.8rem;
+
+  div {
+    margin-right: 1rem;
+  }
+`
+
 export const PhrasesContainer = styled.div`
   display: flex;
   flex-direction: column;

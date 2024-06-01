@@ -23,7 +23,8 @@ import {
   Row,
   Column,
   ExampleContainer,
-  ColumnTitle
+  ColumnTitle,
+  MiddleContainer
 } from "@/components/sharedstyles";
 
 
@@ -34,6 +35,8 @@ import Cards from "@/components/cards";
 import Error from "next/error";
 import Kanji from "@/components/kanji";
 
+import SmallCard from "@/components/smallcard";
+
 interface WordProps {
   data: WordResult;
   success: boolean;
@@ -43,10 +46,9 @@ const Home = (props : WordProps) => {
    
   if (!props.success) return <p>Bad :c</p>
 
-  console.log(props.data)
-
   const { word, reading } = props.data.japanese[0];
-  const { is_common, senses, kanjis, examples } = props.data;
+  const { is_common, senses, kanjis, examples, jlpt } = props.data;
+
 
 
   return (
@@ -78,9 +80,10 @@ const Home = (props : WordProps) => {
             </WordContainer>
           </Row>
           <Separator />
-          <Column>
-          
-          </Column>
+          <MiddleContainer>
+            { is_common && <SmallCard color={"#858585"} text="common word"/>}
+            { jlpt.length > 0 && <SmallCard color={"#858585"} text={jlpt.join("").replace("-", " ")} /> }
+          </MiddleContainer>
           <MeaningsContainer>
             {senses.map((sense, index) => {
               const parts_of_speech = sense.parts_of_speech;

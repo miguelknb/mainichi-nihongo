@@ -11,6 +11,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   p {
+    font-family: NotoSansJP, sans-serif;
     margin: 0rem;
   }
 
